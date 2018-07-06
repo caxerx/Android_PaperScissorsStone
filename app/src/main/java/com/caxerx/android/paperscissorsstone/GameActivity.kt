@@ -13,23 +13,41 @@ class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
-        imageView2.setOnTouchListener { view, event ->
+
+        var onTouchListener: View.OnTouchListener = View.OnTouchListener { view, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
-                view.startDragAndDrop(ClipData.newPlainText("", ""), View.DragShadowBuilder(view), view, 0)
-                return@setOnTouchListener true
+                var builder = View.DragShadowBuilder(view)
+                view.startDragAndDrop(ClipData.newPlainText("", ""), builder, view, 0)
+                return@OnTouchListener true
             }
+            println(event.action.toString())
             false
         }
+        imageView7.setOnTouchListener(onTouchListener)
+        imageView8.setOnTouchListener(onTouchListener)
+        imageView9.setOnTouchListener(onTouchListener)
 
         imageView3.setOnDragListener { view, dragEvent ->
             //view.visibility = View.VISIBLE
             when (dragEvent.action) {
-                DragEvent.ACTION_DRAG_STARTED->{
+                DragEvent.ACTION_DRAG_STARTED -> {
 
                 }
                 DragEvent.ACTION_DROP -> {
-                    println("drop")
+                    when (view.id) {
+                        R.id.imageView7 -> {
 
+                        }
+                        R.id.imageView8 -> {
+
+                        }
+                        R.id.imageView9 -> {
+
+                        }
+                        else -> {
+
+                        }
+                    }
                 }
                 else -> {
 
@@ -37,5 +55,6 @@ class GameActivity : AppCompatActivity() {
             }
             true
         }
+
     }
 }

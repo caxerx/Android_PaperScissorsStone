@@ -23,10 +23,6 @@ class BarChartView(context: Context) : View(context, null) {
         paint.color = Color.BLACK
         paint.strokeWidth = 3F
 
-        //draw X line ( move X
-        canvas.drawLine(leftPaddingForText, height - bottomPaddingForText, width.toFloat(), height - bottomPaddingForText, paint)
-        //draw Y line ( move Y
-        canvas.drawLine(leftPaddingForText, 0F, leftPaddingForText, height - bottomPaddingForText, paint)
 
         var bars = 3
         var bottomText = arrayOf("Win", "Lose", "Draw")
@@ -78,6 +74,14 @@ class BarChartView(context: Context) : View(context, null) {
 
             rectLeft += eachBarWidth + barPadding
         }
+
+
+        paint.color = Color.BLACK
+
+        //draw X line ( move X
+        canvas.drawLine(leftPaddingForText, height - bottomPaddingForText, width.toFloat(), height - bottomPaddingForText, paint)
+        //draw Y line ( move Y
+        canvas.drawLine(leftPaddingForText, 0F, leftPaddingForText, height - bottomPaddingForText, paint)
 
 
     }
