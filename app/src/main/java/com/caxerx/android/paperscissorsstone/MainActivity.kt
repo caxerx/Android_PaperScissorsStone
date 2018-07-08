@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
             startActivity(Intent(applicationContext, GameActivity::class.java))
+            //startActivity(Intent(applicationContext, GameLogActivity::class.java))
         }
 
         val toggle = ActionBarDrawerToggle(

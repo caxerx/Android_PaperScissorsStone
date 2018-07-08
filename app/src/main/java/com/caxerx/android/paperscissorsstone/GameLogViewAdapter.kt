@@ -12,26 +12,6 @@ import java.util.*
 
 class GameLogViewAdapter(var items: List<ListData>) : RecyclerView.Adapter<ViewHolder>() {
 
-    companion object {
-        fun getDrawable(context: Context, play: Int): Drawable {
-            return when (play) {
-                1 -> context.resources.getDrawable(paper, null)
-                2 -> context.resources.getDrawable(scissors, null)
-                else -> context.resources.getDrawable(stone, null)
-            }
-        }
-
-        fun getResultText(myChoose: Int, opponentChoose: Int): String {
-            if (myChoose == opponentChoose) {
-                return "Draw"
-            }
-            if ((myChoose == 1 && opponentChoose == 3) || (myChoose == 2 && opponentChoose == 1) || (myChoose == 3 && opponentChoose == 2)) {
-                return "Win"
-            }
-            return "Lose"
-        }
-    }
-
     lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -43,9 +23,9 @@ class GameLogViewAdapter(var items: List<ListData>) : RecyclerView.Adapter<ViewH
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.itemLayoutView.ivMyChoose.setImageDrawable(getDrawable(context, items[position].myChoose))
-        holder.itemLayoutView.ivOpponentChoose.setImageDrawable(getDrawable(context, items[position].opponentChoose))
-        holder.itemLayoutView.tvResult.text = getResultText(items[position].myChoose, items[position].opponentChoose)
+        holder.itemLayoutView.ivMyChoose.setImageDrawable(GameUtils.getDrawable(context, items[position].myChoose))
+        holder.itemLayoutView.ivOpponentChoose.setImageDrawable(GameUtils.getDrawable(context, items[position].opponentChoose))
+        holder.itemLayoutView.tvResult.text = GameUtils.getResultText(items[position].myChoose, items[position].opponentChoose)
 
     }
 
