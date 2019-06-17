@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 object GameUtils {
     fun getDrawable(context: Context, play: Int): Drawable {
         return when (play) {
+            0 -> context.resources.getDrawable(R.drawable.ic_question, null)
             1 -> context.resources.getDrawable(R.drawable.paper, null)
             2 -> context.resources.getDrawable(R.drawable.scissors, null)
             else -> context.resources.getDrawable(R.drawable.stone, null)
@@ -13,6 +14,9 @@ object GameUtils {
     }
 
     fun getResultText(myChoose: Int, opponentChoose: Int): String {
+        if (myChoose == 0) {
+            return "Lose"
+        }
         if (myChoose == opponentChoose) {
             return "Draw"
         }

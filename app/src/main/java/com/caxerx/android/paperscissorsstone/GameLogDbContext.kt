@@ -4,15 +4,15 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import org.jetbrains.anko.db.*
 
-class MyDatabaseOpenHelper(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "GameLogs", null, 1) {
+class GameLogDbContext(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "GameLogs", null, 1) {
 
     companion object {
-        private var instance: MyDatabaseOpenHelper? = null
+        private var instance: GameLogDbContext? = null
 
         @Synchronized
-        fun getInstance(ctx: Context): MyDatabaseOpenHelper {
+        fun getInstance(ctx: Context): GameLogDbContext {
             if (instance == null) {
-                instance = MyDatabaseOpenHelper(ctx.applicationContext)
+                instance = GameLogDbContext(ctx.applicationContext)
             }
             return instance!!
         }
@@ -20,7 +20,7 @@ class MyDatabaseOpenHelper(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "GameLog
 
     override fun onCreate(db: SQLiteDatabase) {
         db.createTable("GameLog", true,
-                "gameNo" to INTEGER + PRIMARY_KEY + UNIQUE,
+                "gameNo" to INTEGER + PRIMARY_KEY + AUTOINCREMENT,
                 "gamedate" to TEXT,
                 "gametime" to TEXT,
                 "opponentName" to TEXT,
@@ -35,6 +35,6 @@ class MyDatabaseOpenHelper(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "GameLog
     }
 }
 
-// Access property for Context
-val Context.database: MyDatabaseOpenHelper
-    get() = MyDatabaseOpenHelper.getInstance(getApplicationContext())
+
+val Context.database: GameLogDbContext
+    get() = GameLogDbContext.getInstance(applicationContext)

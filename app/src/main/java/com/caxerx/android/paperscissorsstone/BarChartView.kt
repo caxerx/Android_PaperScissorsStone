@@ -4,6 +4,9 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import org.jetbrains.anko.db.parseList
+import org.jetbrains.anko.db.rowParser
+import org.jetbrains.anko.db.select
 import java.text.DecimalFormat
 
 class BarChartView(context: Context) : View(context, null) {
@@ -17,30 +20,66 @@ class BarChartView(context: Context) : View(context, null) {
 
 
     override fun onDraw(canvas: Canvas) {
+        var height = this.height - 25
+        var score = arrayOf(0, 0, 0)
+        var count = 0
+
+        context.database.use {
+            select("GameLog", "yourHand", "opponentHand").exec {
+                parseList(rowParser { yourHand: Int, opponentHand: Int ->
+                    count++
+                    when (GameUtils.getResultText(yourHand, opponentHand)) {
+                        "Win" -> score[0]++
+                        "Lose" -> score[1]++
+                        "Draw" -> score[2]++
+                        else -> {
+                        }
+                    }
+                })
+            }
+        }
+
+        if (count == 0) {
+            paint.isAntiAlias = true
+            paint.typeface = Typeface.MONOSPACE
+            paint.color = Color.BLACK
+            paint.textSize = 40F
+            paint.textAlign = Paint.Align.CENTER
+            canvas.drawText("No Data", width / 2F, height / 2F, paint)
+            return
+        }
+
+
+
+
+
+
+
+
         paint.isAntiAlias = true
         var leftPaddingForText = 100F
         var bottomPaddingForText = 50F
         paint.color = Color.BLACK
         paint.strokeWidth = 3F
+        paint.typeface = Typeface.MONOSPACE
 
 
         var bars = 3
         var bottomText = arrayOf("Win", "Lose", "Draw")
-        var color = arrayOf(Color.RED, Color.GREEN, Color.BLUE)
+        var color = arrayOf(Color.DKGRAY, Color.GRAY, Color.LTGRAY)
         var barPadding = 50F
 
         var lineAndTextPadding = 25F
         var eachBarWidth = (width - leftPaddingForText - barPadding * (bars + 1)) / bars
 
 
-        var score = arrayOf(27, 61, 57)
+
 
         paint.textAlign = Paint.Align.RIGHT
         paint.textSize = 30F
         var textRight = leftPaddingForText - lineAndTextPadding
         var textBottom = height - bottomPaddingForText
 
-        var min = score.min()!!
         var max = score.max()!!
         var step = max / 7F
         var heightStep = bottom / 8F
@@ -49,7 +88,7 @@ class BarChartView(context: Context) : View(context, null) {
         var df = DecimalFormat("0.0")
 
         for (i in 0 until 8) {
-            canvas.drawText(df.format(step * i), textRight, textBottom, paint)
+            canvas.drawText(df.format(step * i), textRight, textBottom + (paint.textSize / 2F), paint)
             textBottom -= heightStep
         }
 

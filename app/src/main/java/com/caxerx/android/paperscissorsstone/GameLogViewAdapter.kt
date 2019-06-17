@@ -15,7 +15,7 @@ class GameLogViewAdapter(var items: List<ListData>) : RecyclerView.Adapter<ViewH
     lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        var itemLayoutView = LayoutInflater.from(parent.context).inflate(R.layout.game_log_list_item, null)
+        var itemLayoutView = LayoutInflater.from(parent.context).inflate(R.layout.game_log_list_item, parent, false)
         context = parent.context
         return ViewHolder(itemLayoutView)
     }
@@ -23,15 +23,15 @@ class GameLogViewAdapter(var items: List<ListData>) : RecyclerView.Adapter<ViewH
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.itemLayoutView.ivMyChoose.setImageDrawable(GameUtils.getDrawable(context, items[position].myChoose))
-        holder.itemLayoutView.ivOpponentChoose.setImageDrawable(GameUtils.getDrawable(context, items[position].opponentChoose))
-        holder.itemLayoutView.tvResult.text = GameUtils.getResultText(items[position].myChoose, items[position].opponentChoose)
-
+        var item = items[position]
+        holder.itemLayoutView.ivMyChoose.setImageDrawable(GameUtils.getDrawable(context, item.myChoose))
+        holder.itemLayoutView.ivOpponentChoose.setImageDrawable(GameUtils.getDrawable(context, item.opponentChoose))
+        holder.itemLayoutView.tvResult.text = GameUtils.getResultText(item.myChoose, item.opponentChoose)
+        holder.itemLayoutView.tvTimeAndOpponent.text = "${item.date} ${item.time} - ${item.opponentName}(${item.opponentAge}) "
     }
-
 
 }
 
 class ViewHolder(var itemLayoutView: View) : RecyclerView.ViewHolder(itemLayoutView)
 
-data class ListData(var myChoose: Int, var opponentChoose: Int, var opponentName: String, var playTime: Date)
+data class ListData(var myChoose: Int, var opponentChoose: Int, var opponentName: String, var time: String, var date: String, var opponentAge: Int)

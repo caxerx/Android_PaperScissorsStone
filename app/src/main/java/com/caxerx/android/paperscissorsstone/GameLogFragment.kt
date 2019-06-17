@@ -5,18 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_game_log.*
+import kotlinx.android.synthetic.main.fragment_game_log.*
+import org.jetbrains.anko.db.SqlOrderDirection
+import org.jetbrains.anko.db.parseList
+import org.jetbrains.anko.db.rowParser
+import org.jetbrains.anko.db.select
 import java.util.*
 
-class GameLogActivity : Fragment() {
+class GameLogFragment : Fragment() {
 
     /*
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_game_log)
+        setContentView(R.layout.fragment_game_log)
         var i1 = ListData(1, 2, "Hi", Date())
         var i2 = ListData(2, 3, "Hi", Date())
         var i3 = ListData(2, 2, "Hi", Date())
@@ -27,17 +30,24 @@ class GameLogActivity : Fragment() {
     */
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.activity_game_log, container, false)
+        return inflater.inflate(R.layout.fragment_game_log, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        var list = mutableListOf<ListData>()
+        var result = view.context.database.use {
+            select("GameLog", "gamedate", "gametime", "opponentName", "opponentAge", "yourHand", "opponentHand")
+                    .orderBy("gamedate", SqlOrderDirection.DESC)
+                    .orderBy("gametime", SqlOrderDirection.DESC).limit(100).exec {
+                        parseList(rowParser { gamedate: String, gametime: String, opponentName: String, opponentAge: Int, yourHand: Int, opponentHand: Int ->
+                            list.add(ListData(yourHand, opponentHand, opponentName, gametime, gamedate, opponentAge))
+                        })
+                    }
+        }
 
-        var i1 = ListData(1, 2, "Hi", Date())
-        var i2 = ListData(2, 3, "Hi", Date())
-        var i3 = ListData(2, 2, "Hi", Date())
         recyclerView.layoutManager = LinearLayoutManager(view.context)
-        recyclerView.adapter = GameLogViewAdapter(listOf(i1, i2, i3))
+        recyclerView.adapter = GameLogViewAdapter(list)
         recyclerView.itemAnimator = DefaultItemAnimator()
     }
 
